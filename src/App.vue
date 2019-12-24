@@ -10,8 +10,7 @@
     <v-navigation-drawer v-model="left" fixed temporary />
 
     <v-content>
-      <form-wrapper>
-      </form-wrapper>
+      <router-view></router-view>
     </v-content>
 
     <v-footer app color="blue-grey" class="white--text">footer</v-footer>
@@ -19,12 +18,8 @@
 </template>
 
 <script>
-import FormWrapper from "./components/FormWrapper";
 
 export default {
-  components: {
-    FormWrapper
-  },
   data: () => ({
     drawer: null,
     left: false,
