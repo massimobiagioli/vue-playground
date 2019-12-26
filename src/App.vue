@@ -3,6 +3,12 @@
     <v-app-bar app clipped-right color="blue-grey" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>Toolbar</v-toolbar-title>
+      <template v-slot:extension>
+        <v-tabs align-with-title>
+          <v-tab to="/">Home</v-tab>
+          <v-tab to="/help">Help</v-tab>
+        </v-tabs>
+      </template>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" app>navigatore sx</v-navigation-drawer>
@@ -18,11 +24,10 @@
 </template>
 
 <script>
-
 export default {
   data: () => ({
     drawer: null,
-    left: false,
+    left: false
   })
 };
 </script>

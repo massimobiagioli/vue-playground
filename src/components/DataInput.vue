@@ -6,12 +6,20 @@
         <span>Id:</span>
         {{id}}
       </div>
+      <div>
+        <span>Counter</span>
+        {{counterNum}}
+        <div>
+          <v-btn @click="incrementCounter({amount: 123})">Increment Counter</v-btn>
+        </div>
+      </div>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import EventBus from "../event-bus";
+import EventBus from '../event-bus';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: "DataInput",
@@ -22,6 +30,13 @@ export default {
   data: () => ({
     content: ""
   }),
+  mounted() {
+    EventBus.$on('afterSpecialEvent', payload => {
+      if (this.id === payload.id) {
+        this.content = payload.value;
+      }
+    });
+  },
   methods: {
     onChange(value) {
       this.$emit("textChange", this.id, value);
@@ -35,14 +50,15 @@ export default {
     },
     getValue() {
       return this.content;
-    }
+    },
+    ...mapActions('counter', [
+      'incrementCounter'
+    ])
   },
-  mounted() {
-    EventBus.$on("afterSpecialEvent", payload => {
-      if (this.id === payload.id) {
-        this.content = payload.value;
-      }
-    });
+  computed: {
+    ...mapState('counter', {
+      counterNum: state => state.counter
+    })
   }
 };
 </script>
