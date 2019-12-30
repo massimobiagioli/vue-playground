@@ -5,7 +5,8 @@
       <v-toolbar-title>Toolbar</v-toolbar-title>
       <template v-slot:extension>
         <v-tabs align-with-title>
-          <v-tab to="/">Home</v-tab>
+          <v-tab to="/">DataInput</v-tab>
+          <v-tab to="/grid">Grid</v-tab>
           <v-tab to="/help">Help</v-tab>
         </v-tabs>
       </template>
