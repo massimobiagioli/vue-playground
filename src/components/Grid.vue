@@ -1,18 +1,13 @@
 <template>
-  <div>
-    <div v-if="isLoading">
-      <span>Loading ...</span>
-    </div>
-    <div v-else>
-      <v-data-table
-        :headers="headers"
-        :items="todos"
-        :options.sync="options"
-        :server-items-length="totalTodos"
-        :loading="isLoading"
-        class="elevation-1"
-      ></v-data-table>
-    </div>
+  <div>    
+    <v-data-table
+      :headers="headers"
+      :items="todos"
+      :options.sync="options"
+      :server-items-length="totalTodos"
+      :loading="loading"
+      class="elevation-1"
+    ></v-data-table>    
   </div>
 </template>
 
@@ -22,41 +17,45 @@ import TodoRepository from '../api/TodoRepository';
 export default {
   name: "Grid",
   data: () => ({
-    isLoading: true,
-    todos: {},
-    totalTodos: 1000,
+    loading: true,    
+    todos: [],
+    totalTodos: 0,
     headers: [
       {
         text: 'Id',
         align: 'center',
-        sortable: true,
+        sortable: false,
         value: 'id',
       },
       { 
         text: 'Title', 
         align: 'left',
-        sortable: true,
+        sortable: false,
         value: 'title' 
       }
     ],
     options: {}
   }),
+  methods: {
+    async loadGrid(page, itemsPerPage) {            
+      this.loading = true;
+      let repo = new TodoRepository();
+      this.totalTodos = await repo.count();  
+      this.todos = await repo.getTodos(page, itemsPerPage);                
+      this.loading = false;     
+    }
+  },
   watch: {
     options: {
-      async handler () {
-        //const { sortBy, sortDesc, page, itemsPerPage } = this.options;
-        //let repo = new TodoRepository();
-        //this.isLoading = true;
-        //this.todos = await repo.getTodos();
-        //this.isLoading = false;
+      async handler () {        
+        const { page, itemsPerPage } = this.options;                        
+        await this.loadGrid(page, itemsPerPage);                     
       },
       deep: true,
     },
   },
-  async mounted() {
-    let repo = new TodoRepository();
-    this.todos = await repo.getTodos();
-    this.isLoading = false;
+  async mounted() {        
+    await this.loadGrid(1, 10);    
   }
 };
 </script>
